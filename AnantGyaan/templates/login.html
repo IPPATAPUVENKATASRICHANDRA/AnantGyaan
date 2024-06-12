@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="static\AG_logo.png">
+    <title>AG's-Login</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #262626;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-size: 15px;
+            min-height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+        #title {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            color: #e8fdff;
+            font-size: 24px;
+        }
+
+        #title img {
+            margin-right: 10px;
+        }
+        h1 {
+            margin-top: 20px;
+            color: #e8fdff;
+        }
+        form {
+            background-color: #262626;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: white;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #262626;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0cb7f5;
+            transition-duration: 0.5s;
+        }
+        p {
+            color: white;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        #title {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            color: #e8fdff;
+            font-size: 24px;
+        }
+
+        #title img {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="title">
+        <img src="static\AG_logo.png" alt="AG's Logo" width="50px" height="50px">
+        <span>AnantGyaan</span>
+    </div>   
+        <h1>Login</h1>
+    <p>Login to your account</p>
+    <form method="POST">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>

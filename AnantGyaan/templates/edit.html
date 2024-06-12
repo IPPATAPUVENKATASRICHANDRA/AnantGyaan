@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Content</title>
+    <link rel="shortcut icon" href="static\AG_logo.png">
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #262626;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-size: 15px;
+            min-height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+
+        h1 {
+            margin-top: 20px;
+            color: #e8fdff;
+        }
+
+        #page {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #333333;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        #titleInput, #publisherInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #444444;
+            color: white;
+        }
+
+        #content {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            min-height: 300px;
+            box-sizing: border-box;
+            background-color: #444444;
+            color: white;
+        }
+
+        #updateBtn {
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: #262626;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #updateBtn:hover {
+            background-color: #0cb7f5;
+            transition-duration: 0.5s;
+        }
+
+        #updateBtn:active {
+            background-color: #0a96d2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Content</h1>
+    <div id="page">
+        <input type="text" id="titleInput" placeholder="Enter document title..." value="{{ item.title }}">
+        <input type="text" id="publisherInput" placeholder="Enter your name..." value="{{ item.publisher }}" readonly>
+        <div id="content" contenteditable="true">{{ item.content | safe }}</div>
+        <button id="updateBtn">Update</button>
+    </div>
+
+    <script>
+        document.getElementById('updateBtn').addEventListener('click', function() {
+            var title = document.getElementById('titleInput').value;
+            var content = document.getElementById('content').innerHTML;
+            var itemId = '{{ item._id }}';
+
+            fetch(`/update/${itemId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    content: content
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'success') {
+                    alert('Content updated successfully');
+                    window.location.href = '/ag_viewers';
+                } else {
+                    alert('Error updating content');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating content');
+            });
+        });
+    </script>
+</body>
+</html>

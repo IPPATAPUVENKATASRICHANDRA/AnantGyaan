@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AG's-Select Cluster</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="static\AG_logo.png">
+
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #262626;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+            font-size: 20px;
+        }
+
+        #title {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            color: #e8fdff;
+            font-size: 24px;
+        }
+
+        #title img {
+            margin-right: 10px;
+        }
+
+        h1, h2 {
+            margin-top: 20px;
+            color: #e8fdff;
+        }
+
+        a, .btn-primary {
+            margin: 10px;
+            display: inline-block;
+            text-decoration: none;
+            color: #0cb7f5;
+            background-color: #262626;
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a:hover, .btn-primary:hover {
+            background-color: #0cb7f5;
+            color: white;
+        }
+
+        .container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .form-control {
+            background-color: #444;
+            border: 1px solid #555;
+            color: white;
+        }
+
+        .form-control:focus {
+            background-color: #555;
+            color: white;
+        }
+
+        .list-group-item {
+            background-color: #444;
+            border: 1px solid #555;
+            color: white;
+        }
+
+        .list-group-item:hover {
+            background-color: #555;
+        }
+
+        hr {
+            border-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">
+        <img src="{{ url_for('static', filename='AG_logo.png') }}" alt="AG's Logo" width="50px" height="50px">
+        <span>AnantGyaan</span>
+    </div>
+    <div class="container">
+        <h1 class="mt-5">Assign Content to Cluster</h1>
+        <form action="{{ url_for('select_cluster') }}" method="POST">
+            <div class="form-group">
+                <label for="cluster_id">Select Cluster</label>
+                <select class="form-control" id="cluster_id" name="cluster_id" required>
+                    {% for cluster in ag_clusters %}
+                        <option value="{{ cluster._id }}">{{ cluster.cluster_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Select Content</label>
+                <ul class="list-group">
+                    {% for content in ag_writers_field %}
+                        <li class="list-group-item">
+                            <input type="checkbox" name="selected_content" value="{{ content._id }}">
+                            {{ content.title }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <button type="submit" class="btn btn-primary">Assign to Cluster</button>
+        </form>
+    </div>
+</body>
+</html>

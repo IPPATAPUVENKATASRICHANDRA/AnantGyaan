@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnantGyaan - Viewers</title>
+    <link rel="shortcut icon" href="static\AG_logo.png">
+
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #262626;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-size: 18px;
+            min-height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+
+        #title {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            color: #e8fdff;
+            font-size: 24px;
+        }
+
+        #title img {
+            margin-right: 10px;
+        }
+
+        h1 {
+            margin-top: 20px;
+            color: #e8fdff;
+        }
+
+        .container {
+            width: 49%;
+            margin: 20px auto;
+
+        }
+
+        .item {
+            background-color:#f2fafc;
+            border-radius: 8px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .item:hover {
+            background-color: #a8a7a8;
+            transition: background-color 0.3s;
+        
+        }
+
+        .item-header {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-header a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .item-header a:hover {
+            text-decoration: underline;
+        }
+
+        .item-content {
+            display: none;
+            padding: 15px;
+            text-align: justify;
+        }
+
+        .item-content img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .item-publisher {
+            font-style: italic;
+            color: gray;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .item-delete, .item-edit {
+            cursor: pointer;
+            color: red;
+        }
+
+        .item-edit {
+            color: blue;
+        }
+
+        .active .item-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">
+        <img src="static\AG_logo.png" alt="AG's Logo" width="50px" height="50px">
+        <span>AnantGyaan</span>
+    </div>    
+    <h1>Viewer's Page</h1>
+    <div class="container">
+        {% for item in ag_writers_field %}
+        <div class="item" data-id="{{ item._id }}">
+            <div class="item-header">
+                <a href="{{ url_for('view_content', id=item._id) }}">{{ item.title }}</a>
+                <div class="item-actions">
+                    <span class="item-edit" data-id="{{ item._id }}">Edit</span>
+                    <span class="item-delete" data-id="{{ item._id }}">Delete</span>
+                </div>
+            </div>
+            <div class="item-content">
+                <p class="item-publisher">Published by: {{ item.publisher }}</p>
+                {{ item.content | safe }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.querySelectorAll('.item-delete').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.stopPropagation();  // Prevent toggling the content display
+                const itemId = this.getAttribute('data-id');
+
+                if (confirm('Are you sure you want to delete this item?')) {
+                    fetch(`/delete/${itemId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'success') {
+                            this.closest('.item').remove();
+                        } else {
+                            alert('Error deleting item');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error deleting item');
+                    });
+                }
+            });
+        });
+
+        document.querySelectorAll('.item-edit').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.stopPropagation();  // Prevent toggling the content display
+                const itemId = this.getAttribute('data-id');
+                window.location.href = `/edit/${itemId}`;
+            });
+        });
+    </script>
+</body>
+</html>

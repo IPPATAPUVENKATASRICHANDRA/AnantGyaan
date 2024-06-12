@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AG's-Writer</title>
+    <link rel="shortcut icon" href="static\AG_logo.png">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #262626;
+        }
+
+        #simple_content {
+            text-align: center;
+            color: white;
+            font-size: 30px;
+            padding: 20px;
+            margin-top: 90px;
+
+            
+        }
+        #decrease, #increase, #downloadBtn, #ClearBtn, #saveBtn {
+            position: absolute;
+            top: 0;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            background-color: #262626;
+            color:#0cb7f5;
+            border-radius: 5px;
+            border: 2px solid white;
+        }
+        
+        #downloadBtn { right: 0; }
+        #ClearBtn { right: calc(100px + 10px); } 
+        #increase { right: calc(200px + 20px); }
+        #decrease { right: calc(300px + 30px); }
+        #saveBtn { right: calc(400px + 40px); }
+        
+        #downloadBtn:hover, #ClearBtn:hover, #increase:hover, #decrease:hover, #saveBtn:hover {
+            background-color: #0cb7f5;
+            color: white;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        #content {
+            width: 100%;
+            height: 100vh;
+            box-sizing: border-box;
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            color:white;
+        }
+        
+        #page {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        #titleInput, #publisherInput {
+            width: 100%;
+            padding: 10px;
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            border: 2px solid #007BFF;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                width: 210mm;
+                height: 297mm;
+                background-color: #f0f0f0;
+            }
+            .content {
+                width: 100%;
+                height: auto;
+                margin: auto;
+                padding: 20px;
+                background-color: #fff;
+                box-sizing: border-box;
+                page-break-after: always;
+            }
+            img, video {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin: 0 auto;
+            }
+        }
+        
+        #sample_content {
+            text-align: center;
+            font-size: 20px;
+            color: black;
+        }
+        #title {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            color: #e8fdff;
+            font-size: 24px;
+        }
+
+        #title img {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">
+        <img src="static\AG_logo.png" alt="AG's Logo" width="50px" height="50px">
+        <span>AnantGyaan</span>
+    </div>   
+        <h1 id='simple_content'>Express Your Knowledge...✍️✍️</h1>
+    <button id="downloadBtn">Download</button>
+    <button id="ClearBtn">Clear</button>
+    <button id="increase">Increase</button>
+    <button id="decrease">Decrease</button>
+    <button id="saveBtn">Save</button>
+    <div id="page">
+        <input type="text" id="titleInput" placeholder="Enter document title...">
+        <input type="text" id="publisherInput" placeholder="Enter your name...">
+        <div id="content" contenteditable="true" placeholder="Start typing here..."></div>
+    </div>
+    <script>
+        window.onload = function() {
+            var content = document.getElementById("content");
+            var downloadBtn = document.getElementById("downloadBtn");
+            var saveBtn = document.getElementById("saveBtn");
+            var titleInput = document.getElementById("titleInput");
+            var publisherInput = document.getElementById("publisherInput");
+        
+            // Save content to local storage when user stops typing for 1 second
+            var typingTimer;
+            var doneTypingInterval = 1000; // 1 second
+        
+            content.addEventListener('input', function() {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(saveContent, doneTypingInterval);
+            });
+        
+            // Save content immediately when the page unloads (e.g., when navigating away)
+            window.addEventListener('unload', function() {
+                saveContent();
+            });
+        
+            // Function to save content to local storage
+            function saveContent() {
+                localStorage.setItem('content', content.innerHTML);
+            }
+        
+            // Clear content when clear button is clicked
+            document.getElementById('ClearBtn').addEventListener('click', function() {
+                content.innerHTML = '';
+                localStorage.removeItem('content');
+            });
+        
+            // Load saved content from local storage on page load
+            var savedContent = localStorage.getItem('content');
+            if (savedContent) {
+                content.innerHTML = savedContent;
+            }
+        
+            // Function to download content as .html file
+            downloadBtn.addEventListener('click', function() {
+                var htmlContent = content.innerHTML;
+                var title = titleInput.value.trim() || "Untitled"; // Use the entered title or "Untitled" if empty
+                var fullHtml = `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>AG'S - ${title}</title>
+                <style>
+                @page { size: A4; margin: 20mm; }
+                body {
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f0f0f0;
+                }
+                .content {
+                    width: 100%;
+                    height: auto;
+                    margin: auto;
+                    padding: 20px;
+                    background-color: #fff;
+                    box-sizing: border-box;
+                    page-break-after: always;
+                }
+                img, video {
+                    max-width: 100%;
+                    height: auto;
+                    display: block;
+                    margin: 0 auto;
+                }
+                </style>
+                </head>
+                <body>
+                <div class="content">
+                ${htmlContent}
+                <p style="text-align: center;"></p>
+                <p style="text-align: center;">******</p>
+                <p style="text-align: center;">AnantGyaan - All rights reserved</p>
+                </div>
+                </body>
+                </html>`;
+                download(title + '.html', fullHtml);
+            });
+        
+            // Function to trigger file download
+            function download(filename, text) {
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+        
+                element.style.display = 'none';
+                document.body.appendChild(element);
+        
+                element.click();
+        
+                document.body.removeChild(element);
+            }
+        
+            // Function to change font size
+            window.changeFontSize = function(action) {
+                var currentSize = window.getComputedStyle(content, null).getPropertyValue('font-size');
+                var currentSizeNumber = parseFloat(currentSize);
+        
+                if (action === 'increase') {
+                    content.style.fontSize = (currentSizeNumber + 2) + 'px';
+                } else if (action === 'decrease') {
+                    content.style.fontSize = (currentSizeNumber - 2) + 'px';
+                }
+            };
+        
+            // Function to set font family
+            window.setFont = function(font) {
+                content.style.fontFamily = font;
+            };
+        
+            // Function to align text
+            window.alignText = function(alignment) {
+                content.style.textAlign = alignment;
+            };
+        
+            // Save content to the server when the save button is clicked
+            saveBtn.addEventListener('click', function() {
+                var title = titleInput.value;
+                var publisher = publisherInput.value;
+                var htmlContent = content.innerHTML;
+                
+                fetch('/writer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        content: htmlContent,
+                        publisher: publisher
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message); // Show success message
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        };
+        
+        const increase = document.getElementById('increase');
+        increase.addEventListener('click', () => {
+            const content = document.getElementById('content');
+            const style = window.getComputedStyle(content, null).getPropertyValue('font-size');
+            const fontSize = parseFloat(style);
+            content.style.fontSize = (fontSize + 2) + 'px';
+        });
+
+        const decrease = document.getElementById('decrease');
+        decrease.addEventListener('click', () => {
+            const content = document.getElementById('content');
+            const fontSize = window.getComputedStyle(content, null).getPropertyValue('font-size');
+            const currentSize = parseFloat(fontSize);
+            content.style.fontSize = (currentSize - 2) + 'px';
+        });
+    </script>
+</body>
+</html>

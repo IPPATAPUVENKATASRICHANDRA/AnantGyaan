@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ content.title }}</title>
+    <link rel="shortcut icon" href="static\AG_logo.png">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #262626;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .content-container {
+            background-color: white;
+            color: black;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            font-size: 20px;
+        }
+
+        h1 {
+            color: #262626;
+        }
+
+        .item-publisher {
+            font-style: italic;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-container">
+        <h1>{{ content.title }}</h1>
+        <p class="item-publisher">Published by: {{ content.publisher }}</p>
+        <div class="item-content">
+            {{ content.content | safe }}
+        </div>
+    </div>
+</body>
+</html>
